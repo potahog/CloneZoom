@@ -20,12 +20,17 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
+const sockets = [];
+
 wss.on("connection", (socket) => {
+    sockets.push(socket);
     console.log("Connected to Browser ✅");
     socket.on("close", ()=>{ console.log("Disconnected form Browser ❌")});
     socket.on("message", (message) => {
-        message = 
-        console.log("" + message);
+        sockets.forEach((aSocket)=>{
+            if(aSocket !== socket)
+                aSocket.send(message.toString());
+        });
     });
     socket.send("hello");
 });
