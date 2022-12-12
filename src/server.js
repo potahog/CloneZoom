@@ -25,10 +25,10 @@ const sockets = [];
 wss.on("connection", (socket) => {
     sockets.push(socket);
     console.log("Connected to Browser ✅");
-    socket.on("close", ()=>{ console.log("Disconnected form Browser ❌")});
+    socket.on("close", () => { console.log("Disconnected form Browser ❌") });
     socket.on("message", (message) => {
-        sockets.forEach((aSocket)=>{
-            if(aSocket !== socket)
+        sockets.forEach((aSocket) => {
+            if (aSocket !== socket)
                 aSocket.send(message.toString());
         });
     });
