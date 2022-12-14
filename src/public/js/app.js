@@ -3,8 +3,8 @@ const nickForm = document.querySelector("#nick");
 const messageForm = document.querySelector("#message");
 const socket = new WebSocket(`ws://${window.location.host}`);
 
-function makeMessage(type, payload) {
-    const msg = { type, payload };
+function makeMessage(type, payload){
+    const msg = {type, payload};
     return JSON.stringify(msg);
 }
 
@@ -15,7 +15,7 @@ socket.addEventListener("open", () => {
 socket.addEventListener("message", (message) => {
     console.log("New Message", message.data);
     const li = document.createElement("li");
-    li.innerText = message.data;
+    li.innerHTML = message.data;
     messageList.append(li);
 });
 

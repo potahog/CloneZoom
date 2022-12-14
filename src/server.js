@@ -23,14 +23,31 @@ const wss = new WebSocketServer({ server });
 const sockets = [];
 
 wss.on("connection", (socket) => {
+    socket["nickname"] = "Anon";
     sockets.push(socket);
     console.log("Connected to Browser ✅");
     socket.on("close", () => { console.log("Disconnected form Browser ❌") });
     socket.on("message", (message) => {
-        sockets.forEach((aSocket) => {
-            if (aSocket !== socket)
-                aSocket.send(message.toString());
-        });
+        const parsed = JSON.parse(message);
+        const type = parsed["type"];
+        const payload = parsed["payload"];
+
+        if (type === "new_message") {
+            sockets.forEach((aSocket) => {
+                if (aSocket.nickname !== socket.nickname) {
+                    aSocket.send(`${socket.nickname}: ${payload}`);
+                }else{
+                    aSocket.send(`<p align=right>me: ${payload}</p>`);
+                }
+            });
+            return;
+        }
+
+        if (type === "nickname") {
+            console.log(payload);
+            socket["nickname"] = payload;
+            return;
+        }
     });
     socket.send("hello");
 });
